@@ -4,12 +4,20 @@ services:
 
   unifi-controller:
     image: linuxserver/unifi-controller
-    network_mode: ${NETWORK_MODE:-host}
+    network_mode: ${NETWORK_MODE:-bridge}
     env_file: config/unifi-controller.env
     environment:
       PUID: ${HOST_USER_ID:?HOST_USER_ID is required}
       PGID: ${HOST_GROUP_ID:?HOST_GROUP_ID is requied}
       TZ: ${TZ:-UTC}
+    ports:
+      - ${WEB_PORT:-8443}:8443
+      - 8080:8080
+      - 6789:6789
+      - 1900:1900/udp
+      - 3478:3478/udp
+      - 5514:5514/udp
+      - 10001:10001/udp
     volumes:
       - unifi-data:/config
     labels:
