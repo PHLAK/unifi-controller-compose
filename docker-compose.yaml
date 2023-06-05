@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   unifi-controller:
-    image: linuxserver/unifi-controller:stable
+    image: linuxserver/unifi-controller
     network_mode: ${NETWORK_MODE:-host}
     env_file: config/unifi-controller.env
     environment:
