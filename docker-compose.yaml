@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+
+  unifi-controller:
+    image: linuxserver/unifi-controller:stable
+    network_mode: ${NETWORK_MODE:-host}
+    env_file: config/unifi-controller.env
+    environment:
+      PUID: ${HOST_USER_ID:?HOST_USER_ID is required}
+      PGID: ${HOST_GROUP_ID:?HOST_GROUP_ID is requied}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - unifi-data:/config
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    env_file: config/watchtower.env
+    environment:
+      WATCHTOWER_SCOPE: ${COMPOSE_PROJECT_NAME}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+volumes:
+  unifi-data: {}
